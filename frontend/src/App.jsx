@@ -10,7 +10,8 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-  const limit = 5; // Define the limit for each page here
+  const [limit, setLimit] = useState(5);
+  const [searchQuery, setSearchQuery] = useState(""); // State to hold the search query
 
   const fetchResults = async (query) => {
     try {
@@ -29,30 +30,23 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchResults("");
-  }, []);
-
-  const handlePageChange = async (page) => {
-    setCurrentPage(page);
-    setLoading(true);
-
-    try {
-      const response = await axios.post("http://localhost:5000/api/search", {
-        query: "",
-        limit,
-        offset: (page - 1) * limit,
-      });
-      setResults(response.data.data);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
+    if (searchQuery) {
+      fetchResults(searchQuery); // Fetch results only when there's a search query
     }
+  }, [searchQuery]); // Run useEffect whenever searchQuery changes
+
+  const handleSearch = (query) => {
+    setSearchQuery(query); // Update searchQuery state when a search is performed
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // Adjust API call to fetch data for the selected page if needed
   };
 
   return (
     <div className="container">
-      <SearchBox onSearch={fetchResults} />
+      <SearchBox onSearch={handleSearch} />
       {loading ? (
         <div className="spinner"></div>
       ) : (
