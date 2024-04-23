@@ -1,19 +1,33 @@
 import React from "react";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const pages = [...Array(totalPages).keys()].map((i) => i + 1);
+  // Calculate the maximum number of pagination buttons to show
+  const maxButtons = 10;
+  const startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+  const endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+  const pageButtons = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageButtons.push(
+      <button
+        key={i}
+        onClick={() => onPageChange(i)}
+        className={currentPage === i ? "active" : ""}
+      >
+        {i}
+      </button>
+    );
+  }
 
   return (
-    <div id="pagination-box">
-      {pages.map((page) => (
-        <button
-          key={page}
-          onClick={() => onPageChange(page)}
-          className={currentPage === page ? "active" : ""}
-        >
-          {page}
-        </button>
-      ))}
+    <div className="pagination">
+      {currentPage > 1 && (
+        <button onClick={() => onPageChange(currentPage - 1)}>&laquo;</button>
+      )}
+      {pageButtons}
+      {currentPage < totalPages && (
+        <button onClick={() => onPageChange(currentPage + 1)}>&raquo;</button>
+      )}
     </div>
   );
 };

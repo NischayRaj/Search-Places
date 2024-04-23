@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const SearchBox = ({ onSearch }) => {
   const [query, setQuery] = useState("");
@@ -14,7 +15,7 @@ const SearchBox = ({ onSearch }) => {
   };
 
   return (
-    <div id="search-box">
+    <div className="search-box">
       <input
         type="text"
         value={query}
